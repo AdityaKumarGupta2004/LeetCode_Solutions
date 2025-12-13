@@ -1,0 +1,46 @@
+class Solution {
+    public int[] shortestPath(int V, int[][] edges, int src) {
+        
+     
+        // 1. Create adjacency list
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        // 2. Build graph (undirected)
+        for (int i = 0; i < edges.length; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+
+        // 3. Distance array
+        int[] dist = new int[V];
+        for (int i = 0; i < V; i++) {
+            dist[i] = -1;
+        }
+
+        // 4. BFS initialization
+        Queue<Integer> q = new LinkedList<>();
+        dist[src] = 0;
+        q.add(src);
+
+        // 5. BFS traversal
+        while (!q.isEmpty()) {
+            int node = q.poll();
+
+            for (int it : adj.get(node)) {
+                if (dist[it] == -1) {   // 🔑 FIX
+                    dist[it] = dist[node] + 1;
+                    q.add(it);
+                }
+            }
+        }
+
+        
+
+        return dist;
+    }
+}
