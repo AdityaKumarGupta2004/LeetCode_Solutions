@@ -1,0 +1,72 @@
+// User function Template for Java
+class Pair{
+    int first; int second;
+    public Pair(int first, int second){
+        this.first = first;
+        this.second = second;
+    }
+}
+class Solution {
+    private void topoSort(int node, ArrayList<ArrayList<Pair>> adj, int[] vis, Stack<Integer> st ){
+        vis[node] = 1;
+        for(Pair it: adj.get(node)){
+            if(vis[it.first] == 0){
+                topoSort(it.first, adj, vis, st);
+            }
+        }
+        
+        st.add(node);
+        
+    }
+
+    public int[] shortestPath(int V, int E, int[][] edges) {
+        // Code here now today was my last exam 
+        ArrayList<ArrayList<Pair>> adj = new ArrayList<>();
+        for(int i=0;i<V;i++){
+            adj.add(new ArrayList<Pair>());
+        }
+        
+        for(int i=0;i<E;i++){  //should iterate over the edges
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int wt = edges[i][2];
+            
+            adj.get(u).add(new Pair(v, wt)); // directed graph
+        }
+        
+        int[] vis = new int[V];
+        Stack<Integer> st = new Stack<>();
+        
+        for(int i=0;i<V;i++){
+            if(vis[i] == 0){
+                topoSort(i,adj, vis, st);
+            }
+        }
+        
+        //relaxing the edges
+        int[] dis = new int[V];
+        Arrays.fill(dis, (int)1e9);
+        
+        dis[0]=0;
+        
+        while(!st.isEmpty()){
+            int node = st.pop();
+            
+            for(Pair it: adj.get(node)){
+                int v= it.first;
+                int wt = it.second;
+                
+                if(dis[node] + wt < dis[v]){
+                    dis[v] = wt + dis[node];
+                }
+            }
+        }
+        
+        for(int i=0;i<V;i++){
+            if(dis[i] == 1e9){
+                dis[i] = -1;
+            }
+        }
+        return dis;
+    }
+}
