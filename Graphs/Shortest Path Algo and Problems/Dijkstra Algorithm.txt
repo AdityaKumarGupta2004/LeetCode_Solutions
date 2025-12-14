@@ -1,0 +1,56 @@
+class Solution {
+    public int[] dijkstra(int V, int[][] edges, int src) {
+        // code here
+            ArrayList<ArrayList<int[]>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        // 2. Build graph (undirected)
+        for (int i = 0; i < edges.length; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int wt = edges[i][2];
+
+            adj.get(u).add(new int[]{v, wt});
+            adj.get(v).add(new int[]{u, wt});   // remove this line for directed graph
+        }
+
+        // 3. Distance array
+        int[] dist = new int[V];
+        Arrays.fill(dist, (int)1e9);
+
+        // 4. Min-heap: {distance, node}
+        PriorityQueue<int[]> pq = new PriorityQueue<>(
+            (a, b) -> a[0] - b[0]
+        );
+
+        // 5. Initialize source
+        dist[src] = 0;
+        pq.add(new int[]{0, src});
+
+        // 6. Dijkstra algorithm
+        while (!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            int d = cur[0];
+            int node = cur[1];
+
+            // Skip outdated entry
+            if (d > dist[node]) continue;
+
+            // Traverse neighbors
+            for (int[] edge : adj.get(node)) {
+                int next = edge[0];
+                int wt = edge[1];
+
+                if (dist[node] + wt < dist[next]) {
+                    dist[next] = dist[node] + wt;
+                    pq.add(new int[]{dist[next], next});
+                }
+            }
+        }
+
+        return dist;
+        
+    }
+}
