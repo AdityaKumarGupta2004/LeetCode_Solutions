@@ -1,44 +1,37 @@
 class Solution {
     public int minimumEffortPath(int[][] grid) {
-         int n = grid.length;
+        int n = grid.length;
         int m = grid[0].length;
 
+        // directions: up, left, right, down
+        int[][] dirs = {{-1,0},{0,-1},{0,1},{1,0}};
 
-        // 2. If source is already destination
-        if (0 == n-1 && 0 == m-1) {//excellent line 
-            return 0;
-        }
-
-        // 3. Four possible directions (up, left, right, down)
-        int[][] dirs = {
-            {-1, 0},   // up
-            {0, -1},   // left
-            {0, 1},    // right
-            {1, 0}     // down
-        };
-
-        // 4. BFS initialization
-       PriorityQueue<int[]> q = new PriorityQueue<>(
-            (a, b) -> a[0] - b[0]
-        );
-        int[][] visited = new int[n][m];
-            for(int i =0;i<n;i++){
-                for(int j =0;j<m;j++){
-                    visited[i][j]=(int)1e9;
-                }
+        // effort[r][c] = min possible maximum edge-diff to reach (r,c)
+        int[][] effort = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                effort[i][j] = (int)1e9;
             }
-        q.offer(new int[]{0, 0, 0});// dist , row , col
-        visited[0][0] = 0;
+        }
+        effort[0][0] = 0;
 
-        // 5. BFS traversal
-        while (!q.isEmpty()) {
-            int[] curr = q.poll();
+        // min-heap: {effortSoFar, row, col}
+        PriorityQueue<int[]> pq = new PriorityQueue<>(
+            (a, b) -> Integer.compare(a[0], b[0])
+        );
+        pq.offer(new int[]{0, 0, 0});
+
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            int dist = curr[0];
             int r = curr[1];
             int c = curr[2];
-            int dist = curr[0];
 
-            // Destination reached
-            if (r == n-1 && c == m-1) {
+            // if this is a stale entry, skip
+            if (dist > effort[r][c]) continue;
+
+            // reached destination
+            if (r == n - 1 && c == m - 1) {
                 return dist;
             }
 
@@ -46,22 +39,19 @@ class Solution {
                 int nr = r + d[0];
                 int nc = c + d[1];
 
-                if (nr >= 0 && nr < n &&
-                    nc >= 0 && nc < m 
-                   ) {
-                    int maxieff = Math.max( Math.abs(grid[nr][nc] - grid[r][c]) , dist);
+                if (nr >= 0 && nr < n && nc >= 0 && nc < m) {
+                    int edge = Math.abs(grid[nr][nc] - grid[r][c]);
+                    int newEffort = Math.max(dist, edge);
 
-                   if(maxieff<visited[nr][nc]){
-                    visited[nr][nc]=maxieff;
-                    q.offer(new int[]{maxieff,nr, nc});
-                   }
+                    if (newEffort < effort[nr][nc]) {
+                        effort[nr][nc] = newEffort;
+                        pq.offer(new int[]{newEffort, nr, nc});
+                    }
                 }
             }
         }
 
-        // 6. No path exists
-        return 0;
-        
+        return 0; // for completeness, won't be hit for valid input
     }
 }
 
