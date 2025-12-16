@@ -56,3 +56,16 @@ class Solution {
 }
 
 // like the dp to store the maximum effort to visit the cell 
+
+Define a queue to store pairs of {difference, (row, col)} where 'difference' represents the current difference from the source node to the current cell.
+Initialize a distance matrix with all cells set to a large number (∞), except for the source node, which is set to 0.
+Push the source node into the queue with its initial difference (0).
+While the queue is not empty, pop the front element. This gives the current node and its associated difference.
+For each adjacent node (left, right, top, and bottom), check if the node lies within valid matrix bounds.
+For each valid adjacent node, calculate the new difference by adding the edge weight to the current difference of the node.
+If the newly calculated difference is smaller than the value in the distance matrix, update the matrix with the new difference.
+Push the adjacent node with the updated difference back into the queue for further processing.
+The queue operates like a min-heap, so nodes with smaller differences are processed first.
+Repeat the process until the queue is empty or the destination node is reached.
+If the destination node is found, return the calculated difference as the shortest path from the source to the destination.
+If the queue becomes empty and the destination node hasn't been reached, return 0, indicating no path exists from source to destination.
