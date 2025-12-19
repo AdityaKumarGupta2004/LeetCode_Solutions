@@ -1,0 +1,66 @@
+class Pair {
+    int x, y;
+
+    public Pair(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+}
+
+class Tuple {
+    int f, s, t;
+
+    public Tuple(int f, int s,int t){
+        this.f = f;
+        this.s = s;
+        this.t = t;
+        
+    }
+
+}
+
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        ArrayList<ArrayList<Pair>> adj = new ArrayList<>();
+
+        for(int i = 0 ; i < n ;i++){
+            adj.add(new ArrayList<>());
+        }
+        int m  = flights.length;
+        for(int i = 0 ; i < m ; i++){
+            adj.get(flights[i][0]).add(new Pair(flights[i][1],flights[i][2]));
+        }
+        Queue<Tuple> q = new LinkedList<>();
+
+        // stop , node , dist
+
+        int[] dist = new int[n];
+        for(int i = 0 ; i< n;i++){
+            dist[i]=(int)(1e9);
+        }
+        dist[src]=0;
+        q.add(new Tuple(0,src,0));
+
+        while(!q.isEmpty()){
+            Tuple curr = q.poll();
+            int stop =  curr.f;
+            int node = curr.s;
+            int dis = curr.t;
+             if(stop > k) continue;
+
+             for(Pair it : adj.get(node)){
+                int to = it.x;
+                int wt = it.y;
+
+                if(wt+dis<dist[to] && stop<=k){
+                    dist[to] = wt + dis;
+                    q.add(new Tuple(stop+1,to,dist[to]));
+                }
+             }
+        }
+
+        if(dist[dst]==(int)(1e9)) return -1;
+        else return dist[dst];
+    }
+}
