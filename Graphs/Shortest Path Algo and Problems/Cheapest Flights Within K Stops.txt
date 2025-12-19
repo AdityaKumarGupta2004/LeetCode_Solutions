@@ -53,7 +53,7 @@ class Solution {
                 int to = it.x;
                 int wt = it.y;
 
-                if(wt+dis<dist[to] && stop<=k){
+                if(wt+dis<dist[to] && stop<=k){// yeha parr check ho raha hai ki yedi dist[k] kum hai ttoh woh pehli hi stop mein aagya hoga woh bhi kum stop mein sayd same stop yeh usee kum
                     dist[to] = wt + dis;
                     q.add(new Tuple(stop+1,to,dist[to]));
                 }
