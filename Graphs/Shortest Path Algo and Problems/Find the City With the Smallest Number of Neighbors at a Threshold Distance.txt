@@ -52,4 +52,4 @@ class Solution {
         return city;
     }
 }
-// using the flloydwarshall algo easy solutionn
+// using the floydwarshall algo easy solutionn
