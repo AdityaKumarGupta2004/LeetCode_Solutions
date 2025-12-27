@@ -1,0 +1,46 @@
+
+
+// By Prim's Algorithm Solution
+class Solution {
+    public int spanningTree(int V, int[][] edges) {
+        // code here
+        ArrayList<ArrayList<int[]>> adj = new ArrayList<>();
+        int sum = 0;
+        
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < edges.length; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int w = edges[i][2];
+            
+            adj.get(u).add(new int[]{v,w});
+            adj.get(v).add(new int[]{u,w});
+            
+        }
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)-> a[0]-b[0]);
+        pq.add(new int[]{0,0});// wt, node
+        boolean[] vis = new boolean[V];
+        
+        while(!pq.isEmpty()){
+            int[] cur = pq.poll();
+            
+            int wt = cur[0];
+            int node = cur[1];
+            
+            if(vis[node]== true) continue;
+            
+            vis[node]= true;
+            sum+= wt;
+            for(int i=0;i<adj.get(node).size();i++){
+                int cur1[] =adj.get(node).get(i);
+                int ng = cur1[0];
+                int nwt = cur1[1];
+                if(vis[ng]==false) pq.add(new int[]{nwt,ng});
+            }
+        }
+        return sum;
+    }
+}
