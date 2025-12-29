@@ -1,0 +1,147 @@
+//union by Size 
+class Solution {
+
+    // Disjoint Set (Union-Find)
+    static class DSU {
+        int[] parent, size;
+
+        DSU(int n) {
+            parent = new int[n];
+            size = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
+        }
+
+        int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]); // Path compression
+            }
+            return parent[x];
+        }
+
+        boolean union(int x, int y) {
+            int px = find(x);
+            int py = find(y);
+
+            if (px == py) return false;
+
+            // Union by size
+            if (size[px] < size[py]) {
+                parent[px] = py;
+                size[py] += size[px];
+            } else {
+                parent[py] = px;
+                  size[px] += size[py];
+            }
+           
+            return true;
+        }
+    }
+
+    public int spanningTree(int V, int[][] edges) {
+
+        // Step 1: Sort edges by weight
+        Arrays.sort(edges, (a, b) -> a[2] - b[2]);
+
+        // Step 2: Initialize DSU
+        DSU dsu = new DSU(V);
+
+        int mstWeight = 0;
+        int count = 0;
+
+        // Step 3: Process edges
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int w = edge[2];
+
+            if (dsu.union(u, v)) {
+                mstWeight += w;
+                count++;
+
+                // MST complete
+                if (count == V - 1) break;
+            }
+        }
+
+        return mstWeight;
+    }
+}
+
+
+
+
+// union by rank
+
+class Solution {
+
+    // Disjoint Set (Union-Find)
+    static class DSU {
+        int[] parent, rank;
+
+        DSU(int n) {
+            parent = new int[n];
+            rank = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                rank[i] = 0;
+            }
+        }
+
+        int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]); // Path compression
+            }
+            return parent[x];
+        }
+
+        boolean union(int x, int y) {
+            int px = find(x);
+            int py = find(y);
+
+            if (px == py) return false;
+
+            // Union by rank
+            if (rank[px] < rank[py]) {
+                parent[px] = py;
+            } else if (rank[px] > rank[py]) {
+                parent[py] = px;
+            } else {
+                parent[py] = px;
+                rank[px]++;
+            }
+            return true;
+        }
+    }
+
+    public int spanningTree(int V, int[][] edges) {
+
+        // Step 1: Sort edges by weight
+        Arrays.sort(edges, (a, b) -> a[2] - b[2]);
+
+        // Step 2: Initialize DSU
+        DSU dsu = new DSU(V);
+
+        int mstWeight = 0;
+        int count = 0;
+
+        // Step 3: Process edges
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int w = edge[2];
+
+            if (dsu.union(u, v)) {
+                mstWeight += w;
+                count++;
+
+                // MST complete
+                if (count == V - 1) break;
+            }
+        }
+
+        return mstWeight;
+    }
+}
