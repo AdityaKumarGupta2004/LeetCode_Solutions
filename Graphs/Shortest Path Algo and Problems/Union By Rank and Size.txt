@@ -77,3 +77,6 @@ Not Same
 Same
 
 Time Complexity:  The time complexity is O(4) which is very small and close to 1. So, we can consider 4 as a constant.
+
+
+4.alpha has a big derivation 
