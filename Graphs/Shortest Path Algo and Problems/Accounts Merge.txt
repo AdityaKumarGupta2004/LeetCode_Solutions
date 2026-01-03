@@ -1,0 +1,96 @@
+class UnionFind {
+        public int[] parent;
+        public int[] rank;
+        public int[] size;
+
+        public UnionFind(int n) {
+            n++;
+            parent = new int[n];
+            rank = new int[n];
+            size = new int[n];
+
+            for(int i = 0; i < n; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
+        }
+        
+        public int find(int p) {
+        	if(p == parent[p]) {
+                return p;
+            }
+            return parent[p] = find(parent[p]); //path compression
+        }
+        
+        public void unionByRank(int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            if(rootP == rootQ) return;
+            if(rank[rootQ] > rank[rootP]) { //q larger, make Q parent
+                parent[rootP] = rootQ;
+            }
+            else if(rank[rootQ] < rank[rootP]){ //p larger, make p parent
+                parent[rootQ] = rootP;
+            }
+            else{
+                  parent[rootQ] = rootP; //both are same, then make anyone parent and increase it's rank
+                  rank[rootP]++;
+             
+            }
+        }
+
+        public void unionBySize(int p, int q) {
+            int rootP = find(p);
+            int rootQ = find(q);
+            if(rootP == rootQ) return;
+            if(size[rootQ] > size[rootP]) { //q larger, make Q parent
+                parent[rootP] = rootQ;
+                size[rootQ] += size[rootP];
+            }
+            else{ //p larger, make p parent
+                parent[rootQ] = rootP;
+                size[rootP] += size[rootQ];
+            }
+        }
+}
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        int n = accounts.size();
+        UnionFind ds = new UnionFind(n);
+        Map<String,Integer> mp = new HashMap<>();
+        for(int i =0 ;i<n;i++){
+            for(int j=1;j<accounts.get(i).size();j++){
+                String mail = accounts.get(i).get(j);
+                if(mp.containsKey(mail)){
+                    ds.unionBySize(i,mp.get(mail));
+                }else{
+                    mp.put(mail,i);
+                }
+            }
+        }
+
+        ArrayList<String>[] mails = new ArrayList[n];
+        for(int i=0;i<n;i++) mails[i] = new ArrayList<String>();
+
+
+        for(Map.Entry<String,Integer> it : mp.entrySet()){
+            String m = it.getKey();
+            int v = it.getValue();
+            int node = ds.find(v);
+            mails[node].add(m);
+        }
+        List<List<String>> ans = new ArrayList<>();
+
+        for(int i =0 ;i< mails.length;i++){
+            if(mails[i].size()==0) continue;
+            Collections.sort(mails[i]);
+            List<String> temp = new ArrayList<>();
+            temp.add(accounts.get(i).get(0));
+            for(String it : mails[i]){
+                temp.add(it);
+            }
+            ans.add(temp);
+        } 
+return ans ;
+    }
+}
