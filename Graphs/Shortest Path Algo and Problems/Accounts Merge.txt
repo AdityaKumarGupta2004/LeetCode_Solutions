@@ -94,3 +94,7 @@ class Solution {
 return ans ;
     }
 }
+
+
+// it uses the union (disjoint set union) ds
+Tc - O(4*alpha)
