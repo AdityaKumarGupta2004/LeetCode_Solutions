@@ -1,0 +1,171 @@
+class DisjointSet {
+    private int[] rank, parent, size;
+
+    public DisjointSet(int n) {
+        rank = new int[n + 1];
+        parent = new int[n + 1];
+        size = new int[n + 1];
+        Arrays.fill(size, 1);
+        for (int i = 0; i <= n; i++) {
+            parent[i] = i;
+        }
+    }
+
+    public int findUPar(int node) {
+        if (node == parent[node]) return node;
+        return parent[node] = findUPar(parent[node]); // Path compression
+    }
+
+    public void unionByRank(int u, int v) {
+        int ulp_u = findUPar(u);
+        int ulp_v = findUPar(v);
+        if (ulp_u == ulp_v) return;
+        if (rank[ulp_u] < rank[ulp_v]) {
+            parent[ulp_u] = ulp_v;
+        } else if (rank[ulp_v] < rank[ulp_u]) {
+            parent[ulp_v] = ulp_u;
+        } else {
+            parent[ulp_v] = ulp_u;
+            rank[ulp_u]++;
+        }
+    }
+
+    public void unionBySize(int u, int v) {
+        int ulp_u = findUPar(u);
+        int ulp_v = findUPar(v);
+        if (ulp_u == ulp_v) return;
+        if (size[ulp_u] < size[ulp_v]) {
+            parent[ulp_u] = ulp_v;
+            size[ulp_v] += size[ulp_u];
+        } else {
+            parent[ulp_v] = ulp_u;
+            size[ulp_u] += size[ulp_v];
+        }
+    }
+}
+
+class Solution {
+    private boolean isValid(int adjr, int adjc, int n, int m) {
+        return adjr >= 0 && adjr < n && adjc >= 0 && adjc < m;
+    }
+
+    public int[] numOfIslands(int n, int m, int[][] operators) {
+        DisjointSet ds = new DisjointSet(n * m);
+        int[][] vis = new int[n][m];
+        int cnt = 0;
+        List<Integer> ans = new ArrayList<>();
+        
+        for (int[] it : operators) {
+            int row = it[0], col = it[1];
+            if (vis[row][col] == 1) {
+                ans.add(cnt);
+                continue;
+            }
+
+            vis[row][col] = 1;
+            cnt++;
+
+            int[] dr = {-1, 0, 1, 0};
+            int[] dc = {0, 1, 0, -1};
+            for (int ind = 0; ind < 4; ind++) {
+                int adjr = row + dr[ind], adjc = col + dc[ind];
+                if (isValid(adjr, adjc, n, m)) {
+                    if (vis[adjr][adjc] == 1) {
+                        int nodeNo = row * m + col;
+                        int adjNodeNo = adjr * m + adjc;
+                        if (ds.findUPar(nodeNo) != ds.findUPar(adjNodeNo)) {
+                            cnt--;
+                            ds.unionBySize(nodeNo, adjNodeNo);
+                        }
+                    }
+                }
+            }
+            ans.add(cnt);
+        }
+
+        // Convert List to Array for returning
+        return ans.stream().mapToInt(i -> i).toArray();
+    }
+}
+
+
+// anothher solution 
+
+
+class DisjointSet {
+    int[] parent;
+    int[] size;
+    
+    public DisjointSet(int n) {
+        parent = new int[n];
+        size = new int[n];
+        
+        for (int i=0;i<n;i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+    
+    public int getUltimateParent(int node) {
+        if (parent[node] == node)
+            return node;
+            
+        return parent[node]= getUltimateParent(parent[node]);
+    }
+    
+    public void unionBySize(int u, int v) {
+        int ultParU = getUltimateParent(u);
+        int ultParV = getUltimateParent(v);
+        
+        if (ultParU == ultParV)
+            return;
+            
+        if (size[ultParU] >= size[ultParV]) {
+            size[ultParU] += size[ultParV];
+            parent[ultParV] = ultParU;
+        } else {
+            size[ultParV] += size[ultParU];
+            parent[ultParU] = ultParV;
+        }
+    }
+}
+
+class Solution {
+    int[] dRow = {-1, 0, 1, 0};
+    int[] dCol = {0, 1, 0, -1};
+
+    public List<Integer> numOfIslands(int rows, int cols, int[][] operators) {
+        List<Integer> res = new ArrayList<>();
+        int n = rows*cols;
+        DisjointSet ds = new DisjointSet(n);
+        boolean[] visited = new boolean[n];
+        int[][] matrix = new int[rows][cols];
+        
+        for (int[] operation: operators) {
+            int r = operation[0];
+            int c = operation[1];
+            matrix[r][c] = 1;
+            
+            int node = r*cols + c;
+            visited[node] = true;
+            
+            for (int i=0;i<4;i++) {
+                int newRow = r + dRow[i];
+                int newCol = c + dCol[i];
+                int newNode = newRow*cols + newCol;
+                
+                if (newRow>=0 && newRow<rows && newCol>=0 && newCol<cols && matrix[newRow][newCol]==1)
+                    ds.unionBySize(node, newNode);
+            }
+            
+            int cnt = 0;
+            for (int i=0;i<n;i++)
+                if (visited[i] && ds.parent[i]==i)
+                    cnt++;
+                    
+            res.add(cnt);
+        }
+        
+        return res;
+    }
+}
