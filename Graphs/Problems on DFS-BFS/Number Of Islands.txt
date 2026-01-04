@@ -1,0 +1,60 @@
+class Pair{
+    int row;
+    int col;
+    public Pair(int row, int col){
+        this.row = row;
+        this.col = col;
+    }
+}
+class Solution {
+    private void bfs(int row, int col, int[][] vis, char[][] grid){
+        vis[row][col] = 1;
+        Queue<Pair> q = new LinkedList<>();
+        q.add(new Pair(row,col));
+        int n = grid.length;
+        int m = grid[0].length;
+
+        while(!q.isEmpty()){
+        int ro = q.peek().row;
+        int co = q.peek().col;
+        q.remove();
+
+        for(int delrow = -1; delrow<=1;delrow++){
+            for(int delcol = -1; delcol<=1; delcol++){
+                int nrow = ro + delrow;
+                int ncol = co + delcol;
+
+                if(Math.abs(delrow-delcol) == 1 && nrow>=0 && nrow<n && ncol>= 0&& ncol<m 
+                    && grid[nrow][ncol]=='1'&& vis[nrow][ncol] == 0){
+                        vis[nrow][ncol] = 1;
+                        q.add(new Pair(nrow,ncol));
+                    }
+            }
+        }
+        }
+        
+
+    }
+    
+    public int numIslands(char[][] grid) {
+        int n  = grid.length;
+        int m = grid[0].length;
+        int[][] vis = new int[n][m];
+
+        int cnt = 0;
+        for(int row = 0; row<n; row++){
+            for(int col = 0; col<m; col++){
+                if(vis[row][col] == 0 && grid[row][col] == '1'){
+                    
+                    bfs(row,col,vis,grid);
+                    cnt++;
+                }
+            }
+        }
+        return cnt;
+        
+    }
+}
+
+
+Tc - O(n^2)
