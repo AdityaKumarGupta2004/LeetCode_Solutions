@@ -39,3 +39,5 @@ class Solution {
 
     }
 }
+
+// this using the kruskal algo 
