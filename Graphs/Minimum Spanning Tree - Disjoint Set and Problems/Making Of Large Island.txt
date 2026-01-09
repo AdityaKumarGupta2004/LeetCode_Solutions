@@ -153,4 +153,4 @@ class Solution {
 // tc - O(n^2)
 
 
-// this is done by bfs algo 
+// this is done by bfs algo used to detact the one components at a time 
