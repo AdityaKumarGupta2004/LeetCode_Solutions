@@ -41,3 +41,4 @@ class Solution {
 }
 
 // this using the kruskal algo 
+// min heap is used for minimum and from the path max is take and push that min heap
