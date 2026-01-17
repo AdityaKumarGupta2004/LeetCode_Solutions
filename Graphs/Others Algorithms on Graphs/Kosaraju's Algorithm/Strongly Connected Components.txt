@@ -70,4 +70,4 @@ class Solution {
         return scc;
     }
 }
-// 
+// TC - O(V+E)
