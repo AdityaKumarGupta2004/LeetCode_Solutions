@@ -31,3 +31,6 @@ class Solution {
                 
     }
 }
+
+
+imp--  Pick and non pick concept is used in the question 
