@@ -1,0 +1,61 @@
+class Solution {
+     static boolean[] isSubsetSum(int arr[], int sum) {
+        // code here
+        boolean[] prev = new boolean[sum+1];
+        prev[0] = true;
+        // curr[0] = true;
+        int n = arr.length;
+        
+        if(sum>=arr[0])
+        prev[arr[0]]=true;
+        
+        for(int i = 1 ; i < n ;i++){
+            boolean[] curr = new boolean[sum+1];
+            curr[0] = true;
+            for(int tar = 1 ;tar <= sum ;tar++){
+                
+                boolean nottake = prev[tar];
+                boolean take = false;
+                if(tar>=arr[i]){
+                    take = prev[tar-arr[i]];
+                }
+                
+                curr[tar] = take||nottake;
+            }
+            prev = curr;
+            
+            
+        }
+        return prev;
+                
+    }
+    public int minDifference(int nums[]) {
+        // code here
+        
+         int n = nums.length;
+
+        int totalSum = 0;
+
+        int min = Integer.MAX_VALUE;
+        for(int nm : nums){
+            totalSum+=nm;
+
+        }
+
+        int target= totalSum/2;
+
+        boolean prev[] = isSubsetSum(nums,totalSum);
+
+        for (int s1 = 0; s1 <= target; s1++) {
+            if (prev[s1]) {
+                int s2 = totalSum - s1;
+                min = Math.min(min, Math.abs(s1 - s2));
+            }
+        }
+
+        return min;
+
+        
+    }
+}
+It is only valid for Positive Integers in the array 
