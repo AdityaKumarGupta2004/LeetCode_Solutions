@@ -1,0 +1,48 @@
+class Solution {
+    // static int helper(int nums[],int i , int tar){
+    //     if(i==0){
+    //         if(tar%nums[0]==0) return tar/nums[0];
+    //         else return (int)1e9;
+    //     }
+
+    //     int nottake = 0 + helper(nums ,i-1, tar);
+    //     int take = Integer.MAX_VALUE;
+    //     if(nums[i]<=tar) take = 1+helper(nums,i,tar-nums[i]);
+
+    //     return Math.min(take,nottake);
+    // }
+    public int coinChange(int[] coins, int amount) {
+      int prev[] = new int[amount+1];
+      
+
+      for(int t = 0 ;  t<=amount ; t++){
+        if(t%coins[0]==0) 
+           prev[t] = t/coins[0];
+        else prev[t] = (int)1e9;
+      }
+        int n = coins.length;
+
+      for(int i=1;i<n;i++){
+        int curr[] = new int[amount+1];
+        for(int t = 0 ;  t<=amount ; t++){
+            int nottake = 0 + prev[t];
+            int take = (int)1e9;
+            if(coins[i]<=t) take = 1 +curr[t-coins[i]];
+            curr[t] = Math.min(take,nottake);
+        }
+         prev = curr;
+      }
+
+    if(prev[amount]>=1e9) return -1;
+
+    return prev[amount];
+
+    }
+}
+
+Time Complexity: O(N*T), there are total of N*T states.
+Space Complexity: O(T), additonal space used to for storing rows
+Time Complexity: O(N*T), there are total of N*T states.
+Space Complexity: O(T), additonal space used to for storing rows
+
+
