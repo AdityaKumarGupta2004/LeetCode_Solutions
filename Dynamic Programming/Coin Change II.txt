@@ -1,0 +1,43 @@
+class Solution {
+     public int countSubsets(int[] arr, int K) {
+        // Get number of elements
+        int n = arr.length;
+
+        // Create dp table with dimensions n x (K+1)
+        int[][] dp = new int[n][K + 1];
+
+        // Base case: one subset (empty set) makes sum 0
+        dp[0][0] = 1;
+
+        // If first element is <= K, mark dp[0][arr[0]] as 1
+        for(int j = 0 ; j <= K;j++){
+
+            if(j % arr[0] == 0) dp[0][j]=1;
+        }
+
+        // Fill the table
+        for (int i = 1; i < n; i++) {
+            for (int target = 0; target <= K; target++) {
+                // Exclude current element
+                int notTake = dp[i - 1][target];
+
+                // Include current element if possible
+                int take = 0;
+                if (arr[i] <= target) take = dp[i][target - arr[i]];
+
+                // Total ways
+                dp[i][target] = notTake + take;
+            }
+        }
+
+        // Final answer
+        return dp[n - 1][K];
+    }
+    public int change(int amount, int[] coins) {
+        return countSubsets(coins,amount);
+    }
+}
+
+// Time Complexity: O(N*T), as There are two nested loops.
+
+// Space Complexity: O(T), as We are using an external array of size ‘T+1’ to store two rows only.

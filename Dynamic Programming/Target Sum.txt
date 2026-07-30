@@ -73,3 +73,6 @@ class Solution {
 // 	    return dp[n][newTarget];
 //     }
 // }
+Time Complexity: O(N*K),There are three nested loops
+
+Space Complexity: O(K),We are using an external array of size ‘K+1’ to store only one row.
