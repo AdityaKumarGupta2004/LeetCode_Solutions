@@ -1,0 +1,42 @@
+class Solution {
+    public int lcs(String str1, String str2) {
+        int n = str1.length();
+        int m = str2.length();
+        
+        // Arrays to store previous and current row of DP table
+        int[] prev = new int[m + 1];
+        int[] cur = new int[m + 1];
+
+        // Base case already handled by arrays initialized to 0
+        for (int ind1 = 1; ind1 <= n; ind1++) {
+            for (int ind2 = 1; ind2 <= m; ind2++) {
+                // If characters match → diagonal + 1
+                if (str1.charAt(ind1 - 1) == str2.charAt(ind2 - 1))
+                    cur[ind2] = 1 + prev[ind2 - 1];
+                // Else → take max from top or left
+                else
+                    cur[ind2] = Math.max(prev[ind2], cur[ind2 - 1]);
+            }
+            // Copy current row to previous row for next iteration
+            System.arraycopy(cur, 0, prev, 0, m + 1);
+        }
+        
+        // Result is in prev[m]
+        return prev[m];
+    }
+    public int minDistance(String word1, String word2) {
+        
+
+        int n = lcs(word1,word2);
+
+        int x1= word1.length();
+        int x2 = word2.length();
+
+        int ans = x1+x2-2*n;
+
+        return ans;
+        
+
+
+    }
+}
