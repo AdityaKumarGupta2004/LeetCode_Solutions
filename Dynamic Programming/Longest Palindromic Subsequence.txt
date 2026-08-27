@@ -66,4 +66,8 @@ public int lcs(String str1, String str2) {
     }
 
 
+Time Complexity: O(n * m), where n is the length of str1 and m is the length of str2. This is because we are iterating through both strings and filling a 2D DP table.
+
+Space Complexity: O(m), where m is the length of str2. We are using two arrays of size m+1 to store the current and previous row values.
+
 This is advance version of longest common subsequence 
