@@ -1,0 +1,37 @@
+class Solution {
+    public int maxProfit(int[] arr, int fee) {
+   
+        int n = arr.length;
+
+        int dp[][] = new int[n + 1][2];
+
+        dp[n][0] = 0;
+        dp[n][1] = 0;
+
+        for (int ind = n - 1; ind >= 0; ind--) {
+            for (int buy = 0; buy <= 1; buy++) {
+                int profit;
+                if (buy == 0) {
+                    // We can buy → two options:
+                    // 1. Skip buying → profit remains dp[ind+1][0]
+                    // 2. Buy → pay the price (-arr[ind]) and move to selling state
+                    profit = Math.max(
+                            0 + dp[ind + 1][0], // not take 
+                            -arr[ind] + dp[ind + 1][1] // buy and will sell later
+                    );
+                } else {
+                    // We can sell → two options:
+                    // 1. Skip selling → profit remains dp[ind+1][1]
+                    // 2. Sell → gain price and move to buying state
+                    profit = Math.max(
+                            0 + dp[ind + 1][1],
+                            arr[ind] + dp[ind + 1][0]-fee);
+                }
+                dp[ind][buy] = profit;
+
+            }
+        }
+
+        return dp[0][0];
+    }
+}
