@@ -35,3 +35,14 @@ class Solution {
         return dp[1][c];
     }
 }
+
+
+The recurrence is:
+
+$$ dp[i][j] = \min_{i \le k \le j} \left( cuts[j+1]-cuts[i-1] + dp[i][k-1] + dp[k+1][j] \right) $$
+Complexity
+
+Let c be the number of cuts.
+
+Time complexity: O(c³) — three nested loops.
+Space complexity: O(c²) — the DP table.
